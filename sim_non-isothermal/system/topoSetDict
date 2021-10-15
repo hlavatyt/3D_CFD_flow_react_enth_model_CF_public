@@ -1,0 +1,68 @@
+/*--------------------------------*- C++ -*----------------------------------*\ 
+| ========                 |                                                 | 
+| \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           | 
+|  \    /   O peration     | Version:  4.1                                   | 
+|   \  /    A nd           | Web:      www.OpenFOAM.org                      | 
+|    \/     M anipulation  |                                                 | 
+\*---------------------------------------------------------------------------*/ 
+FoamFile 
+{ 
+ 	 version 	 2.0; 
+ 	 format 	 ascii; 
+ 	 class 		 dictionary; 
+ 	 object 	 topoSetDict; 
+} 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * // 
+
+actions
+(
+	//use this to cut the coating in front of the channel
+	{
+		name	coating2;
+		type	cellSet;
+		action	new;
+		source	zoneToCell;
+		sourceInfo
+		{
+			name	 coating;
+		}
+	}
+	{
+		name	coating2;
+		type	cellSet;
+		action	delete;
+		source	boxToCell;
+		sourceInfo
+		{
+			box (0.0 0.0 0.0) (1.0 1.0 0.007);							//where to cut
+		}
+	}
+	{
+		name	coating2;
+		type	cellSet;
+		action	delete;
+		source	boxToCell;
+		sourceInfo
+		{
+			box (0.0 0.0 0.097) (1.0 1.0 1.0);							//where to cut
+		}
+	}
+	{
+		name	coating;
+		type	cellZoneSet;
+		action	remove;
+	}
+	{
+		name coating;
+		type cellZoneSet;
+		action new;
+		source	setToCellZone;
+		sourceInfo
+		{
+			set coating2;
+		}
+	}	
+	
+);
+// ************************************************************************* //
+

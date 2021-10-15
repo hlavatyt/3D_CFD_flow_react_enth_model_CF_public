@@ -1,0 +1,94 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| ========                 |                                                 |
+| \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \    /   O peration     | Version:  4.1                                   |
+|   \  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+         version         2.0;
+         format          ascii;
+         class           dictionary;
+         object          topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(   
+    {
+        name    cylWhol;
+        type    faceSet;
+        action  new;
+        source  patchToFace;
+        sourceInfo
+        {
+                name    cylinder;
+        }
+    }
+    {
+        name    cylInl;
+        type    faceSet;
+        action  new;
+        source  normalToFace;
+        sourceInfo
+        {
+                normal (0 0 1);
+		cos 	0.6;
+        }
+    } 
+    {
+	name cylWhol;
+	type faceSet;
+	action delete;
+	source 	faceToFace;
+	sourceInfo
+	{
+		set cylInl;
+	}
+    }
+    {
+	name inletCyl;
+	type faceSet;
+	action new;
+	source patchToFace;
+	sourceInfo
+	{
+		name cylinder;
+	}
+    }
+    {
+	name meziKruzi;
+	type cellSet;
+	action new;
+	source cylinderAnnulusToCell;
+	sourceInfo
+	{
+		p1 (0.0021850000000000 0.002185000000000  0.04100000000000);
+		p2 (0.002185000000000 0.002185000000000   0.1000000000000);
+		outerRadius 340e-6;
+		innerRadius 125e-6;
+	}
+    }
+    {
+	name inletCyl;
+	type faceSet;
+	action delete;
+	source cellToFace;
+	sourceInfo
+	{
+		set meziKruzi;
+		option all;
+	}
+    }
+    {
+	name inletCyl;
+	type faceSet;
+	action delete;
+	source faceToFace;
+	sourceInfo
+	{
+		set cylWhol;
+	}
+    }
+);

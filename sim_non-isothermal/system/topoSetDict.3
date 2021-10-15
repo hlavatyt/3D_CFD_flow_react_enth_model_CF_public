@@ -1,0 +1,107 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| ========                 |                                                 |
+| \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \    /   O peration     | Version:  4.1                                   |
+|   \  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+         version         2.0;
+         format          ascii;
+         class           dictionary;
+         object          topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(   
+    {
+        name    s1;
+        type    cellSet;
+        action  new;
+        source  cylinderToCell;
+        sourceInfo
+        {
+                p1 (9.15e-4 0.002185 0.0);
+		p2 (9.15e-4 0.002185 1.0);
+		radius 1.25e-4;
+        }
+    }
+    {
+        name    s1CZS;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+                set s1;
+        }
+    } 
+    {
+        name    s2;
+        type    cellSet;
+        action  new;
+        source  cylinderToCell;
+        sourceInfo
+        {
+                p1 (0.002185 9.15e-4 0.0);
+		p2 (0.002185 9.15e-4 1.0);
+		radius 1.25e-4;
+        }
+    }
+    {
+        name    s2CZS;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+                set s2;
+        }
+    } 
+    {
+        name    s3;
+        type    cellSet;
+        action  new;
+        source  cylinderToCell;
+        sourceInfo
+        {
+                p1 (3.46e-3 0.002185 0.0);
+		p2 (3.46e-3 0.002185 1.0);
+		radius 1.25e-4;
+        }
+    }
+    {
+        name    s3CZS;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+                set s3;
+        }
+    } 
+    {
+        name    s4;
+        type    cellSet;
+        action  new;
+        source  cylinderToCell;
+        sourceInfo
+        {
+                p1 (0.002185 3.46e-3 0.0);
+		p2 (0.002185 3.46e-3 1.0);
+		radius 1.25e-4;
+        }
+    }
+    {
+        name    s4CZS;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        sourceInfo
+        {
+                set s4;
+        }
+    } 
+);
