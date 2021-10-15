@@ -123,7 +123,7 @@ for ind2 in range(len(tempLst)):
     os.system('mv log.flowDCRentV  log.flowDCRentV%g'%tempLst[ind2])
 
     # -- postProcess
-    os.system("reconstructPar -fields '(CO T O2 U CO2 p)' -latestTime")         # reconstruct Case
+    os.system("reconstructPar -fields '(CO T O2 U CO2 p)' -latestTime >> log.reconstructPar%g"%tempLst[ind2])         # reconstruct Case
     dirsI = []
     dirsS = os.listdir('./processor0')
     for Dir in dirsS:
