@@ -1,1 +1,7 @@
+Simulation folder prepared for OpenFOAM6 Simulation
 
+1) Set BC in 0.org/*
+2) Compile solver "./DCR_thermV13/Allwmake"
+3) run simulation:
+    a) single temperature simulation -- ./Allrun-parallel
+    a) temperature study given in caseRunner.py -- ./caseRunnner.py
