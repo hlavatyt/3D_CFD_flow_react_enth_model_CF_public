@@ -1,0 +1,44 @@
+#!/bin/sh
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+rm -rf 0
+
+# python blockMeshDictGenV5.py
+# Note: this was already prepared in caseConstructor
+
+runApplication blockMesh
+
+echo 'stitching the mesh'
+chmod 777 stitchMeshSc.sh
+bash stitchMeshSc.sh
+
+# Note: stitchMesh now returns warning, but it all seems to end well
+
+runApplication createPatch -overwrite
+
+#~ runApplication refineWallLayer -overwrite "(walls)" 0.5
+#~ mv log.refineWallLayer log.refineWallLayer_0
+#~ runApplication refineWallLayer -overwrite "(walls)" 0.5
+#~ mv log.refineWallLayer log.refineWallLayer_1
+#~ runApplication refineWallLayer -overwrite "(walls)" 0.5
+#~ mv log.refineWallLayer log.refineWallLayer_2
+
+#~ runApplication topoSet
+#~ runApplication refineMesh -overwrite
+
+paraFoam -touch
+
+mkdir 0
+cp -rf 0.org/* 0
+
+## runApplication renumberMesh -overwrite -frontWidth
+python genGeomFPMAll.py
+
+runApplication decomposePar
+
+application=`getApplication`
+runParallel $application
+
+runApplication reconstructPar -latestTime
+
+#postProcess -func 'patchAverage(name=inlet,p)' -latestTime > log.patchAverageInlet
