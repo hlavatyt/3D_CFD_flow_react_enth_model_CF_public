@@ -1,0 +1,52 @@
+#!/bin/sh
+. $WM_PROJECT_DIR/bin/tools/RunFunctions
+
+#~rm -rf 0
+
+# python blockMeshDictGenV5.py
+# Note: this was already prepared in caseConstructor
+
+#~runApplication blockMesh
+
+#~echo 'stitching the mesh'
+#~chmod 777 stitchMeshSc.sh
+#~bash stitchMeshSc.sh
+
+# Note: stitchMesh now returns warning, but it all seems to end well
+
+#~runApplication createPatch -overwrite
+
+#~ runApplication refineWallLayer -overwrite "(walls)" 0.5
+#~ mv log.refineWallLayer log.refineWallLayer_0
+#~ runApplication refineWallLayer -overwrite "(walls)" 0.5
+#~ mv log.refineWallLayer log.refineWallLayer_1
+#~ runApplication refineWallLayer -overwrite "(walls)" 0.5
+#~ mv log.refineWallLayer log.refineWallLayer_2
+
+#~ runApplication topoSet
+#~ runApplication refineMesh -overwrite
+
+#~paraFoam -touch
+
+#~mkdir 0
+#~cp -rf 0.org/* 0
+
+#~runApplication renumberMesh -overwrite
+#~mv log.renumberMesh log.renumberMeshSerial
+
+## runApplication renumberMesh -overwrite -frontWidth
+
+#runApplication decomposePar
+
+#~runParallel renumberMesh -parallel -overwrite
+
+application=`getApplication`
+runParallel $application
+
+runApplication reconstructPar -latestTime
+
+#~postProcess -func 'patchAverage(name=outlet,CO)' -latestTime > log.patchAverageOutletCO
+#~postProcess -func 'patchAverage(name=outlet,NO)' -latestTime > log.patchAverageOutletNO
+#~postProcess -func 'patchAverage(name=outlet,O2)' -latestTime > log.patchAverageOutletO2
+#~postProcess -func 'patchAverage(name=outlet,N2O)' -latestTime > log.patchAverageOutletN2O
+#~postProcess -func 'patchAverage(name=inlet,p)' -latestTime > log.patchAverageInletP
