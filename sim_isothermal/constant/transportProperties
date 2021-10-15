@@ -1,0 +1,186 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  4.1                                   |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      transportProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+transportModel  Newtonian;
+
+nu	[0 2 -1 0 0 0 0]	0.00001597;
+
+//~ species (CO O2 NO CO2 N2 N2O);
+species (CO O2 NO N2O);
+//~ species (NO N2 N2O CO2 CO O2);
+
+CO
+{
+    // for diffusivity computations
+    sigmaV      18.0;                                                   //diffusion volume in m3mol-1
+    molM        28.0e-3;                                                //molar mass in kgmol-1
+    sigmaVR     18.5;                                                   //diffusion volume of the reference gas in m3mol-1
+    molMR       28.0e-3;                                                //molar mass of the reference gas kgmol-1
+    //---
+    D   D   [0  2  -1  0  0 0 0]  0.00004074879181974784; 	//for constant solver
+    minForGrad  1e-15;
+    nuVec       (-1.0 -1.0 -0.5 0.0);                                   //row of the stoechiometric matrix
+    alphaVec    (1.0 1.0 1.0 0.0);                                      //powers in different reactions kinetics
+}
+
+O2
+{
+    // for diffusivity computations
+    sigmaV      16.3;                                                   //diffusion volume in m3mol-1
+    molM        32.0e-3;                                                //molar mass in kgmol-1
+    sigmaVR     18.5;                                                   //diffusion volume of the reference gas in m3mol-1
+    molMR       28.0e-3;                                                //molar mass of the reference gas kgmol-1
+    //---
+     D   D   [0  2  -1  0  0 0 0]  0.00004113132605143633;	//for constant solver
+    minForGrad  1e-15;
+    nuVec       (-0.5 0.0 0.0 0.5);                                     //row of the stoechiometric matrix
+    alphaVec    (1.0 0.0 0.0 0.0);                                      //powers in different reactions kinetics
+}
+
+NO
+{
+    // for diffusivity computations
+    sigmaV      13.8;                                                   //diffusion volume in m3mol-1
+    //~ sigmaV      10.65;                                                   //diffusion volume in m3mol-1 --------XPF
+    molM        30.0e-3;                                                //molar mass in kgmol-1
+    sigmaVR     18.5;                                                   //diffusion volume of the reference gas in m3mol-1
+    molMR       28.0e-3;                                                //molar mass of the reference gas kgmol-1
+    //---
+    D   D   [0  2  -1  0  0 0 0]  0.00004113132605143633; 	//for constant solver
+    minForGrad  1e-15;
+    nuVec       (0.0 -1.0 -1.0 0.0);                                    //row of the stoechiometric matrix
+    alphaVec    (0.0 1.0 1.0 0.0);                                      //powers in different reactions kinetics
+}
+
+N2O
+{
+    // for diffusivity computations
+    sigmaV      35.9;                                                   //diffusion volume in m3mol-1
+    //~ sigmaV      16.76;                                                   //diffusion volume in m3mol-1 --------XPF
+    molM        44.0e-3;                                                //molar mass in kgmol-1
+    sigmaVR     18.5;                                                   //diffusion volume of the reference gas in m3mol-1
+    molMR       28.0e-3;                                                //molar mass of the reference gas kgmol-1
+    //---
+    D   D   [0  2  -1  0  0 0 0]  0.00004113132605143633; 	//for constant solver
+    minForGrad  1e-15;
+    nuVec       (0.0 0.0 0.5 -1.0);                                     //row of the stoechiometric matrix
+    alphaVec    (0.0 0.0 0.0 1.0);                                      //powers in different reactions kinetics
+}
+
+
+isOnWallCoat
+{//field with the location of the coating - 1 -> coating - 0 -> free
+    type        field;
+}
+isInWallCoat
+{//field with the location of the coating - 1 -> coating - 0 -> free
+    type        field;
+}
+
+coatingProps    
+{
+    porEps  porEps  [0 0 0 0 0 0 0] 0.3;                                //coating porosity
+    constr  constr  [0 0 0 0 0 0 0] 1.0;                                //constrictivity   //for elimination set to 1.0
+    tort    tort    [0 0 0 0 0 0 0] 3.32;                               //tortuosity
+    dP	dP	[0 1 0 0 0 0 0] 1.0e-6;								//Mean pore size of on-wall catalytic coating (m) -- XPF
+    kappaT  kappaT  [1 1 -3 -1 0 0 0] 3.0;                              //thermal conductivity of coating in Wm-1K-1
+    Cp      Cp      [0 2 -2 -1 0 0 0] 0.9e3;                            //specific heat of the substrate in Jkg-1K-1
+    rho     rho     [1 -3 0 0 0 0 0] 2600.0;                            //density in kgm-3 (assumed constant)
+}
+
+substrateProps
+{
+    porEps  porEps  [0 0 0 0 0 0 0] 0.36;
+    constr  constr  [0 0 0 0 0 0 0] 1.0;                                //constrictivity   //for elimination set to 1.0
+    tort    tort    [0 0 0 0 0 0 0] 3.0;                                //tortuosity
+    dP	dP	[0 1 0 0 0 0 0] 1.91e-5;								//Mean pore size of on-wall catalytic coating (m) -- XPF
+    kappaT  kappaT  [1 1 -3 -1 0 0 0] 3.0;                              //thermal conductivity of substrate Wm-1K-1
+    Cp      Cp      [0 2 -2 -1 0 0 0] 0.9e3;                            //specific heat of the substrate Jkg-1K-1
+    rho     rho     [1 -3 0 0 0 0 0] 2600.0;                            //density in kgm-3 (assumed constant)
+}
+
+inWallProperties
+{
+    //~ coatingVolFrac  0.4;                                                //Mara data: 0.181
+    coatingVolFrac 0.18;                                                //XPF
+}
+
+onWallProperties
+{
+    coatingVolFrac 0.92;
+}
+
+// Deff = D*porEps*constr/tort - estimate for the effective diffusivity in coating
+// Deff - random pore model N. Wakao, J.M. Smith, Chemical Engineering Science, 17 (1962)
+// D - N. Wakao, J.M. Smith, Chemical Engineering Science, 17 (1962)
+
+reactProps
+{//reaction specific properties   // data from M.Dudák et al., Applied Catalysis B:Environmental (2014)
+    activeReacts    (1 1 1 1);                                          //switch reactions on/off
+    
+    reaction00
+    {//C0 + 0.5O2 -> CO2, kinetics r1 = k*CO^a1*O2^b1
+        // Note: check the units in k0
+        k0      k0      [0  3  -1  0  -1 0 0]   2.00e13;
+        //~ k0      k0      [0  6  -1  0  -2 0 0]   1.00e13;				//z XPF
+        // k0      k0      [0  0  -1  0  0 0 0]   2.00e13;
+        EA      EA      [1  2 -2 0 -1 0 0]      90e3;
+        // Note: there is no activation, nor inhibition, just this simple thing
+    }
+    reaction01
+    {//CO + NO -> CO2 + 0.5N2, kinetics r2 = k*CO^a2*NO^b2
+        // Note: check the units in k0
+        k0      k0      [0  3  -1  0  -1 0 0]   1.00e10;
+        //~ k0      k0      [0 6  -1  0  -2 0 0]  4.89e08;
+        // k0      k0      [0  0  -1  0  0 0 0]   1.00e10;
+        EA      EA      [1  2 -2 0 -1 0 0]      62.57e3;
+        // Note: there is no activation, nor inhibition, just this simple thing
+    }
+    reaction02
+    {//0.5CO + NO -> CO2 + N2O, kinetics r3 = k*CO^a3*NO^b3
+        // Note: check the units in k0
+        k0      k0      [0  3  -1  0  -1 0 0]   1.0e7;
+        //~ k0      k0      [0  6  -1  0  -2 0 0]    2.07e06;
+        // k0      k0      [0  0  -1  0  0 0 0]   1.0e7;
+        EA      EA      [1  2 -2 0 -1 0 0]      39.84e3;
+        // Note: there is no activation, nor inhibition, just this simple thing
+    }
+    reaction03
+    {//N2O -> N2 + 0.5O2, kinetics r4 = k*N2O^a4
+        // Note: check the units in k0!!!!
+        k0      k0      [0  0  -1  0  0 0 0]   2.00e15;
+        //~ k0      k0      [0  3  -1  0  -1 0 0]  2.14e15;
+        // k0      k0      [0  0  -1  0  0 0 0]   2.00e15;
+        EA      EA      [1  2 -2 0 -1 0 0]      162.60e3;
+        // Note: there is no activation, nor inhibition, just this simple thing
+    }
+    numProps
+    {
+        clipGradMin     -1e9;
+        clipGradMax     1e9;
+    }
+}
+
+genProps
+{// general properties (the same for all the reactions and species)
+    univR   univR   [1  2 -2 -1 -1 0 0]  8.314;
+    pAtm    pAtm    [1 -1 -2  0  0 0 0]  101325;                        //Pa
+	cTemp	cTemp	[0 0 0 1 0 0 0]	303.00;
+}
+
+
+// ************************************************************************* //
