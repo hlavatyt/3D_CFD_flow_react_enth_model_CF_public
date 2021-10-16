@@ -104,7 +104,7 @@ for ind2 in range(len(tempLst)):
             fileHn.writelines(lineLst)
 
     # -- set temperature
-    os.system('cp -r 0 %d'%max(dirsI))
+    os.system('cp -r 0.org %d'%max(dirsI))
     fileHn  = open('%d/T'%max(dirsI),'r')
     lineLst = fileHn.readlines()
     for ind in range(len(lineLst)):
